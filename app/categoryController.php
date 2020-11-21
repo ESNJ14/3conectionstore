@@ -1,4 +1,8 @@
 <?php 
+
+	if (!isset($_SESSION)) {
+    session_start();
+}
 	
 	include "connectionController.php";
 
@@ -15,9 +19,20 @@
 				$categoryController->store($name, $description, $status);
 
 				break;
-			case 'store': 
+			case 'update':
+
+				$name= strip_tags($_POST['name']);
+				$description= strip_tags($_POST['description']);
+				$status= strip_tags($_POST['status']);
+				$id = strip_tags($_POST['id']);
+				var_dump($_POST);
+
 				break;
-			case 'store': 
+			case 'destoy': 
+
+				$id= strip_tags($_POST['id']);
+
+
 				break;
 
 							
@@ -82,6 +97,63 @@
 				header("Location:".$_SERVER['HTTP_REFERER']);
 			}
 
+		}
+
+		public function update($name, $description, $status)
+		{
+			$conn = connect();
+			if ($conn->connect_error==false) {
+
+				if($name!="" && $description!="" && $status!="")
+				{
+					$query ="update categories set name =?, description = ?, status = ? where id = ?";
+					$prepared_query= $conn->prepare($query);
+					$prepared_query->bind_param('sssi',$name, $description, $status, $id);
+					if ($prepared_query->execute()) {
+						
+						header("Location:".$_SERVER['HTTP_REFERER']);
+					}else{
+						header("Location:".$_SERVER['HTTP_REFERER']);
+					}
+
+				}else{
+					header("Location:".$_SERVER['HTTP_REFERER']);
+				}
+
+			}else{
+				header("Location:".$_SERVER['HTTP_REFERER']);
+			}
+		}
+
+		public function destoy($id)
+		{
+			$conn = connect();
+			if ($conn->connect_error==false) {
+
+				if($id !="")
+				{
+					$query ="delete() form catecories where id = ?";
+					$prepared_query= $conn->prepare($query);
+					$prepared_query->bind_param('i',$id);
+					if ($prepared_query->execute()) {
+						
+						$_SESION['success'] = 'El regisro se ha guardado correctamente' ;
+
+						header("Location:".$_SERVER['HTTP_REFERER']);
+					}else{
+
+						$_SESION['error'] = 'Verifique los datos envíados' ;
+
+						header("Location:".$_SERVER['HTTP_REFERER']);
+					}
+
+				}else{
+					header("Location:".$_SERVER['HTTP_REFERER']);
+				}
+
+			}else{				
+				header("Location:".$_SERVER['HTTP_REFERER']);
+			}
 		}
 
 

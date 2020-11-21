@@ -6,7 +6,7 @@
 	definine("DBNM", "nexflix");
 
 	function connect(){
-		$conn = new mysqli(HOST,USER,PSWD);
+		$conn = new mysqli(HOST,USER,PSWD,DBNM);
 		if ($conn) {
 			return $conn;
 		}
